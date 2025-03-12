@@ -68,7 +68,7 @@ On platforms other than Mac, Rust's Keyring library should also provide other pa
 ### Usage
 
 ```bash
-# Use the default configuration search path (first ~/.quickmail.yml, then config.yml)
+# Use the default configuration search path (first config.yml in current directory, then ~/.quickmail.yml)
 quickmail --title "Email Title" --message "Email Content"
 
 # Specify a configuration file
@@ -157,7 +157,7 @@ security add-generic-password -s "quickmail" -a "your.email@example.com" -w "you
 ### 使用方法
 
 ```bash
-# 使用默认配置文件搜索路径（首先是 ~/.quickmail.yml，然后是 config.yml）
+# 使用默认配置文件搜索路径（首先是当前目录下的 config.yml，然后是 ~/.quickmail.yml）
 quickmail --title "邮件标题" --message "邮件内容"
 
 # 指定配置文件

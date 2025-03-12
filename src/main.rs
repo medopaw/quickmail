@@ -44,7 +44,13 @@ fn find_config_file(specified_path: Option<&str>) -> Result<String> {
         return Ok(path.to_string());
     }
 
-    // Try to find config in home directory first
+    // Try to find config in current directory first
+    let current_dir_config = PathBuf::from("config.yml");
+    if current_dir_config.exists() {
+        return Ok("config.yml".to_string());
+    }
+
+    // Then try the home directory
     if let Some(home_dir) = dirs::home_dir() {
         let home_config = home_dir.join(".quickmail.yml");
         if home_config.exists() {
@@ -52,14 +58,8 @@ fn find_config_file(specified_path: Option<&str>) -> Result<String> {
         }
     }
 
-    // Then try the current directory
-    let current_dir_config = PathBuf::from("config.yml");
-    if current_dir_config.exists() {
-        return Ok("config.yml".to_string());
-    }
-
     // If no config file is found, return an error
-    Err(anyhow::anyhow!("No configuration file found. Please create ~/.quickmail.yml or config.yml in the current directory, or specify a config file with --config"))
+    Err(anyhow::anyhow!("No configuration file found. Please create config.yml in the current directory or ~/.quickmail.yml in your home directory, or specify a config file with --config"))
 }
 
 fn get_smtp_password(service: &str, account: &str) -> Result<String> {
