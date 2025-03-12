@@ -2,6 +2,13 @@
 name = "quickmail"
 version = "0.1.0"
 edition = "2021"
+description = "一个快速发送邮件的命令行工具"
+authors = ["Med0paW<medopaw@gmail.com>"]
+license = "MIT" # 或其他许可证
+repository = "https://github.com/medopaw/quickmail"
+readme = "README.md"
+keywords = ["email", "cli", "mail"]
+categories = ["command-line-utilities", "email"]
 
 [dependencies]
 lettre = "0.10"
