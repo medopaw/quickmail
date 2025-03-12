@@ -35,8 +35,7 @@ struct Config {
 fn read_config(path: &str) -> Result<Config> {
     let content = fs::read_to_string(path)
         .with_context(|| format!("Failed to read config file: {}", path))?;
-    serde_yaml::from_str(&content)
-        .with_context(|| format!("Failed to parse config file: {}", path))
+    serde_yaml::from_str(&content).with_context(|| format!("Failed to parse config file: {}", path))
 }
 
 fn find_config_file(specified_path: Option<&str>) -> Result<String> {
@@ -44,7 +43,7 @@ fn find_config_file(specified_path: Option<&str>) -> Result<String> {
     if let Some(path) = specified_path {
         return Ok(path.to_string());
     }
-    
+
     // Try to find config in home directory first
     if let Some(home_dir) = dirs::home_dir() {
         let home_config = home_dir.join(".quickmail.yml");
@@ -52,30 +51,26 @@ fn find_config_file(specified_path: Option<&str>) -> Result<String> {
             return Ok(home_config.to_string_lossy().to_string());
         }
     }
-    
+
     // Then try the current directory
     let current_dir_config = PathBuf::from("config.yml");
     if current_dir_config.exists() {
         return Ok("config.yml".to_string());
     }
-    
+
     // If no config file is found, return an error
     Err(anyhow::anyhow!("No configuration file found. Please create ~/.quickmail.yml or config.yml in the current directory, or specify a config file with --config"))
 }
 
 fn get_smtp_password(service: &str, account: &str) -> Result<String> {
-    let entry = keyring::Entry::new(service, account)
-        .with_context(|| "Failed to create keychain entry")?;
-    entry.get_password()
+    let entry =
+        keyring::Entry::new(service, account).with_context(|| "Failed to create keychain entry")?;
+    entry
+        .get_password()
         .with_context(|| "Failed to get password from keychain")
 }
 
-fn send_email(
-    title: &str,
-    message: &str,
-    config: &Config,
-    smtp_password: &str,
-) -> Result<()> {
+fn send_email(title: &str, message: &str, config: &Config, smtp_password: &str) -> Result<()> {
     let email = Message::builder()
         .from(config.sender.parse()?)
         .to(config.receiver.parse()?)
@@ -90,7 +85,8 @@ fn send_email(
         .credentials(creds)
         .build();
 
-    mailer.send(&email)
+    mailer
+        .send(&email)
         .with_context(|| "Failed to send email")?;
 
     println!("Email sent successfully!");
@@ -100,14 +96,14 @@ fn send_email(
 #[tokio::main]
 async fn main() -> Result<()> {
     let args = Args::parse();
-    
+
     // Find the appropriate config file
     let config_path = find_config_file(args.config.as_deref())?;
     let config = read_config(&config_path)?;
-    
+
     let smtp_password = get_smtp_password(&config.keychain_service, &config.keychain_account)?;
-    
+
     send_email(&args.title, &args.message, &config, &smtp_password)?;
-    
+
     Ok(())
 }
