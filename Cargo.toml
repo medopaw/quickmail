@@ -18,3 +18,4 @@ clap = { version = "4.4", features = ["derive"] }
 keyring = "2.0"
 tokio = { version = "1.0", features = ["full"] }
 anyhow = "1.0"
+dirs = "5.0"

@@ -4,6 +4,7 @@ use lettre::transport::smtp::authentication::Credentials;
 use lettre::{Message, SmtpTransport, Transport};
 use serde::Deserialize;
 use std::fs;
+use std::path::PathBuf;
 
 #[derive(Parser)]
 #[command(author, version, about, long_about = None)]
@@ -17,8 +18,8 @@ struct Args {
     message: String,
 
     /// Config file path
-    #[arg(short, long, default_value = "config.yml")]
-    config: String,
+    #[arg(short, long)]
+    config: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -36,6 +37,30 @@ fn read_config(path: &str) -> Result<Config> {
         .with_context(|| format!("Failed to read config file: {}", path))?;
     serde_yaml::from_str(&content)
         .with_context(|| format!("Failed to parse config file: {}", path))
+}
+
+fn find_config_file(specified_path: Option<&str>) -> Result<String> {
+    // If a config file is explicitly specified, use that
+    if let Some(path) = specified_path {
+        return Ok(path.to_string());
+    }
+    
+    // Try to find config in home directory first
+    if let Some(home_dir) = dirs::home_dir() {
+        let home_config = home_dir.join(".quickmail.yml");
+        if home_config.exists() {
+            return Ok(home_config.to_string_lossy().to_string());
+        }
+    }
+    
+    // Then try the current directory
+    let current_dir_config = PathBuf::from("config.yml");
+    if current_dir_config.exists() {
+        return Ok("config.yml".to_string());
+    }
+    
+    // If no config file is found, return an error
+    Err(anyhow::anyhow!("No configuration file found. Please create ~/.quickmail.yml or config.yml in the current directory, or specify a config file with --config"))
 }
 
 fn get_smtp_password(service: &str, account: &str) -> Result<String> {
@@ -75,7 +100,10 @@ fn send_email(
 #[tokio::main]
 async fn main() -> Result<()> {
     let args = Args::parse();
-    let config = read_config(&args.config)?;
+    
+    // Find the appropriate config file
+    let config_path = find_config_file(args.config.as_deref())?;
+    let config = read_config(&config_path)?;
     
     let smtp_password = get_smtp_password(&config.keychain_service, &config.keychain_account)?;
     

@@ -26,9 +26,16 @@ The compiled binary will be located at `target/release/quickmail`.
 
 ### Configuration
 
-1. Copy the example configuration file and modify it:
+1. Create a configuration file. You can either:
+   - Create `~/.quickmail.yml` in your home directory (recommended)
+   - Create `config.yml` in the current directory
+   - Use a custom named configuration file (which you'll need to specify with `--config`)
 
 ```bash
+# Option 1: Create in home directory (recommended)
+cp config.yml.example ~/.quickmail.yml
+
+# Option 2: Create in current directory
 cp config.yml.example config.yml
 ```
 
@@ -61,7 +68,7 @@ On platforms other than Mac, Rust's Keyring library should also provide other pa
 ### Usage
 
 ```bash
-# Use the default configuration file (config.yml)
+# Use the default configuration search path (first ~/.quickmail.yml, then config.yml)
 quickmail --title "Email Title" --message "Email Content"
 
 # Specify a configuration file
@@ -108,9 +115,16 @@ cargo build --release
 
 ### 配置
 
-1. 复制示例配置文件并进行修改：
+1. 创建配置文件。您可以选择：
+   - 在您的主目录中创建 `~/.quickmail.yml`（推荐）
+   - 在当前目录中创建 `config.yml`
+   - 使用自定义命名的配置文件（需要使用 `--config` 指定）
 
 ```bash
+# 选项1：在主目录中创建（推荐）
+cp config.yml.example ~/.quickmail.yml
+
+# 选项2：在当前目录中创建
 cp config.yml.example config.yml
 ```
 
@@ -143,7 +157,7 @@ security add-generic-password -s "quickmail" -a "your.email@example.com" -w "you
 ### 使用方法
 
 ```bash
-# 使用默认配置文件 (config.yml)
+# 使用默认配置文件搜索路径（首先是 ~/.quickmail.yml，然后是 config.yml）
 quickmail --title "邮件标题" --message "邮件内容"
 
 # 指定配置文件
