@@ -1,0 +1,9 @@
+# Email configuration
+sender: "your.email@example.com"
+receiver: "recipient@example.com"
+smtp_server: "smtp.example.com"
+smtp_port: 587
+
+# Keychain access parameters
+keychain_service: "quickmail"
+keychain_account: "your.email@example.com"
