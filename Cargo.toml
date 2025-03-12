@@ -2,9 +2,9 @@
 name = "quickmail"
 version = "0.1.0"
 edition = "2021"
-description = "一个快速发送邮件的命令行工具"
+description = "A fast command-line tool for sending emails"
 authors = ["Med0paW<medopaw@gmail.com>"]
-license = "MIT" # 或其他许可证
+license = "MIT"
 repository = "https://github.com/medopaw/quickmail"
 readme = "README.md"
 keywords = ["email", "cli", "mail"]
