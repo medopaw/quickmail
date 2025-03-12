@@ -1,6 +1,6 @@
 [package]
 name = "quickmail"
-version = "0.1.0"
+version = "0.1.1"
 edition = "2021"
 description = "A fast command-line tool for sending emails"
 authors = ["Med0paW<medopaw@gmail.com>"]
