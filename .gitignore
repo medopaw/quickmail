@@ -43,3 +43,6 @@ Temporary Items
 
 # Configuration files
 config.yml
+
+# Development files
+/.dev/
